@@ -9,9 +9,12 @@ export const createUser = async ({ name, email, password, role }) => {
 };
 
 export const findUserByEmail = async (email) => {
+   
     const [rows] = await connection.execute(
         'select * from  users where email = ?',
         [email]
     );
+    console.log(rows)
+   
     return rows[0];
 };
