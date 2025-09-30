@@ -15,14 +15,29 @@ export const addPatient = async (req, res) => {
     }
 };
 
-// Get patients
+// Get patients with filters & pagination
 export const getPatients = async (req, res) => {
     try {
-        const { search } = req.query;
-        const patients = await getAllPatients(search);
-        res.json(patients);
+        const { search = '', page = 1, limit = 10, doctorId, gender } = req.query;
+
+        const data = await getAllPatients({ search, page, limit, doctorId, gender });
+
+        // Always return patients as an array
+        res.json({
+            patients: Array.isArray(data.patients) ? data.patients : [],
+            totalCount: data.totalCount || 0,
+            totalPages: data.totalPages || 1,
+            currentPage: data.currentPage || parseInt(page) || 1
+        });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('Error fetching patients:', error);
+        res.status(500).json({
+            patients: [], // fallback empty array
+            totalCount: 0,
+            totalPages: 1,
+            currentPage: parseInt(req.query.page) || 1,
+            error: error.message
+        });
     }
 };
 

@@ -8,7 +8,7 @@ import patientRoutes from './routes/patientRoutes.js';
 import doctorRoutes from './routes/doctorRoutes.js';
 import labRoutes from './routes/labRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
-
+import billingRoutes from './routes/billingRoutes.js';
 dotenv.config();
 
 const app = express();
@@ -24,7 +24,7 @@ app.use('/api/patients', patientRoutes);
 app.use('/api/doctor', doctorRoutes);
 app.use('/api/lab', labRoutes);
 app.use('/api/admin', adminRoutes);
-
+app.use('/api/billings', billingRoutes);
 app.get('/', (req, res) => {
     res.send('Backend server running!');
 });
