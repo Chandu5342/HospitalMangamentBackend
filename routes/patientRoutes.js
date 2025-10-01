@@ -8,7 +8,7 @@ const router = express.Router();
 router.post('/', protect, authorize('reception', 'admin'), addPatient);
 
 
-router.get('/', protect, authorize('reception', 'doctor', 'admin'), getPatients);
+router.get('/', protect, authorize('reception', 'doctor', 'admin','lab'), getPatients);
 
 router.put('/assign', protect, authorize('reception', 'admin'), assignDoctor);
 

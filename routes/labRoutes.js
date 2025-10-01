@@ -2,7 +2,7 @@ import express from 'express';
 import multer from 'multer';
 import { protect } from '../middleware/authMiddleware.js';
 import { authorize } from '../middleware/roleMiddleware.js';
-import { addLabReport, getLabResults } from '../controllers/labController.js';
+import { addLabReport, getLabResults, downloadLabReport } from '../controllers/labController.js';
 import path from 'path';
 import fs from 'fs';
 
@@ -21,6 +21,11 @@ const upload = multer({ storage });
 
 // Routes
 router.post('/upload', protect, authorize('lab'), upload.single('file'), addLabReport);
+
+// Fetch lab results by patientId with pagination
 router.get('/:patientId', protect, authorize('lab', 'doctor', 'reception', 'admin'), getLabResults);
+
+// Secure file download
+router.get('/download/:id', protect, authorize('lab', 'doctor', 'reception', 'admin'), downloadLabReport);
 
 export default router;
