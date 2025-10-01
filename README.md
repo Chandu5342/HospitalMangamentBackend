@@ -1,156 +1,71 @@
-🏥 Hospital Management System (HMS) – Full Stack
+# Hospital Management System Backend
 
-This repository contains the Frontend (React.js) and Backend (Node.js + Express + MySQL) for a Hospital Management System. The system supports multiple roles: Admin, Reception, Doctor, and Lab Staff, with role-based access and secure authentication.
+This is the backend API for the Hospital Management System built with Node.js, Express, MySQL, and JWT authentication.
 
-📂 Backend
-Features
+## Features
+- User authentication (Signup, Login) with JWT and token management 
+- Role-based access control (roles: admin, doctor, reception)
+- Patient management APIs (CRUD, assign doctor)
+- Doctor APIs (dashboard, add treatment, patient history)
+- Reception APIs (add patient, assign doctor)
+- Billing APIs (create bill, fetch bills, pay)
+- Lab results APIs (upload/view lab reports)
+- Pagination for patient history and other lists
 
-User authentication with JWT (Login only for this assessment, Registration managed by Admin)
+## Folder Structure
 
-Role-based access control (Admin, Doctor, Reception, Lab Staff)
-
-Reception Module: Add patients, assign doctors, manage patient records, billing
-
-Doctor Module: Dashboard, add treatment, view patient history (with pagination), view lab results
-
-Lab Module: Upload lab results for patients
-
-Admin Module: Manage users, view reports
-
-REST APIs with proper error handling
-
-Folder Structure
 backend/
-│── controllers/      # API route logic
-│── db/               # Database connection (MySQL)
-│── middleware/       # Auth & role middleware
-│── models/           # DB queries for each module
-│── routes/           # Express routes per module
-│── server.js         # App entry point
+│── config/         # Database & JWT configuration
+│── controllers/    # API business logic
+│── middleware/     # Auth and role-based middleware
+│── models/         # Database queries/models
+│── routes/         # API endpoints
+│── server.js       # App entry point
 
-Tech Stack
+## Tech Stack
+- Node.js + Express
+- MySQL + mysql2
+- JWT Authentication
+- bcrypt.js for password hashing
 
-Node.js + Express.js
+## API Endpoints
 
-MySQL (Prisma ORM optional)
+### Auth
+- POST `/api/auth/signup` → Register a new user
+- POST `/api/auth/login` → Login user, returns JWT
 
-JWT Authentication
+### Patients
+- GET `/api/patients` → Fetch all patients (filters supported)
+- POST `/api/patients` → Add a patient
+- PUT `/api/patients/assign` → Assign doctor to patient
 
-Cloud Storage (for lab results, e.g., AWS S3, optional)
+### Doctor
+- GET `/api/doctor/patients` → Get assigned patients (with search)
+- POST `/api/doctor/treatment` → Add treatment record
+- GET `/api/doctor/history/:patientId` → Get patient treatment history
+- GET `/api/doctor/history/:patientId/paginated?page=1&limit=10` → Paginated history
+- GET `/api/doctor/lab-results/:patientId` → Get lab results for patient
 
-PDF generation (frontend via jsPDF)
+### Billing
+- POST `/api/billing/:patientId` → Create bill
+- GET `/api/billing/:patientId` → Get all bills for patient
+- POST `/api/billing/:patientId/:billId/pay` → Pay a bill
 
-API Endpoints
+### Lab Results
+- POST `/api/lab-results/upload` → Upload lab result file
+- GET `/api/lab-results/:patientId` → Get lab results for a patient
 
-Auth
+## Backend Live API
+- https://hospitalmangamentbackend.onrender.com
 
-POST /api/auth/login – Authenticate user, return JWT
+## Admin / Reception / Doctor Test Accounts
+- Admin: admin@gmail.com / 123456
+- Doctor: doctor1@gmail.com / 123456
+- Reception: reception@gmail.com / 123456
 
-Reception
-
-POST /api/patients – Add patient
-
-GET /api/patients – Get all patients (with optional search)
-
-PUT /api/patients/assign – Assign doctor to patient
-
-Doctor
-
-GET /api/doctor/patients – Get patients assigned to logged-in doctor
-
-POST /api/doctor/treatment – Add treatment record
-
-GET /api/doctor/history/:patientId – Get patient treatment history (?page=&limit= optional)
-
-GET /api/doctor/lab-results/:patientId – Get lab results for patient
-
-Billing
-
-POST /api/billing/:patientId – Create a bill
-
-GET /api/billing/:patientId – Fetch patient bills
-
-PUT /api/billing/:patientId/pay/:billId – Mark bill as paid
-
-Admin
-
-GET /api/admin/users – List users
-
-POST /api/admin/users – Add user
-
-PUT /api/admin/users/:id – Edit user
-
-DELETE /api/admin/users/:id – Delete user
-
-Deployment
-
-Live Backend API (Render example): https://hospitalmangamentbackend.onrender.com
-
-Run locally:
-
-git clone <backend-repo-url>
+## Run Locally
+```bash
+git clone <your-repo-url>
 cd backend
 npm install
 npm start
-
-📂 Frontend
-Features
-
-React.js with React Bootstrap components
-
-Role-based dashboards:
-
-Reception: Manage patients, assign doctors, create/view bills
-
-Doctor: Dashboard with assigned patients, treatment records, patient history, lab results
-
-Lab: Upload lab reports
-
-Admin: Manage users, dashboards
-
-Pagination, search, and filtering for patients & treatments
-
-PDF generation for bills/treatment reports using jsPDF
-
-JWT authentication for API requests
-
-Folder Structure
-frontend/
-│── api/              # Axios calls to backend APIs
-│── components/       # React components for each module
-│── context/          # Auth context for JWT
-│── pages/            # Main dashboard pages
-│── App.jsx           # Main App
-│── main.jsx          # React entry
-│── index.css         # Styling
-
-Deployment
-
-Live Frontend: Example https://hospitalfrontend.onrender.com
-
-Run locally:
-
-git clone <frontend-repo-url>
-cd frontend
-npm install
-npm run dev
-
-Screenshots / Demo
-
-Patient Management
-
-Doctor Dashboard
-
-Billing PDF Generation
-
-Lab Result Upload
-
-Admin User Management
-
-Admin Test Account
-
-Use this account to test all modules:
-
-Email: admin@hospital.com
-
-Password: Admin123
