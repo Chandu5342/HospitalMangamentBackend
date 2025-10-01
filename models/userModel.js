@@ -14,7 +14,7 @@ export const findUserByEmail = async (email) => {
         'select * from  users where email = ?',
         [email]
     );
-    console.log(rows)
+   
    
     return rows[0];
 };
