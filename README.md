@@ -160,7 +160,7 @@ http://localhost:5000/uploads/<file-name>
 ## Run Locally
 
 ```bash
-git clone <your-repo-url>
+git clone (https://github.com/Chandu5342/HospitalMangamentBackend.git)
 cd backend
 npm install
 npm run dev
