@@ -1,71 +1,169 @@
 # Hospital Management System Backend
 
-This is the backend API for the Hospital Management System built with Node.js, Express, MySQL, and JWT authentication.
+This is the backend API for the Hospital Management System built with **Node.js**, **Express**, **MongoDB**, and **JWT authentication**.
 
 ## Features
-- User authentication (Signup, Login) with JWT and token management 
-- Role-based access control (roles: admin, doctor, reception)
-- Patient management APIs (CRUD, assign doctor)
-- Doctor APIs (dashboard, add treatment, patient history)
-- Reception APIs (add patient, assign doctor)
-- Billing APIs (create bill, fetch bills, pay)
-- Lab results APIs (upload/view lab reports)
-- Pagination for patient history and other lists
+
+* **User authentication**
+
+  * Signup/Login with JWT
+  * Role-based access control (`admin`, `doctor`, `reception`, `lab`)
+* **Admin Module**
+  * Add, update, list, and remove users
+  * add full and paginated,filters for the userlist
+  * Dashboard statistics (patients, doctors,reception,lab)
+* **Receiption Management**
+  * Add patients
+  * Assign doctors
+  * Fetch patient details(full and paginated,filters)
+  * Billing  (create bill, fetch bills, pay)
+* **Doctor Module**
+  * Fetch assigned patients
+  * Add treatment records
+  * View patient history (full and paginated,filters)
+  * Access lab results for patients
+* **Lab Module**
+  * Upload lab results
+  * Fetch lab results for patients (full and paginated,filters)
+* **File Uploads**
+  * Serve uploaded files from `/uploads` folder
+* **Middleware**
+  * JWT authentication
+  * Role-based authorization
+---
 
 ## Folder Structure
 
+```
 backend/
-│── config/         # Database & JWT configuration
 │── controllers/    # API business logic
 │── middleware/     # Auth and role-based middleware
-│── models/         # Database queries/models
+│── models/         # Database models
 │── routes/         # API endpoints
-│── server.js       # App entry point
+│── uploads/        # Uploaded files
+│── app.js          # Express app setup
+│── server.js       # Server entry point
+│── .env            # Environment variables
+```
+
+---
 
 ## Tech Stack
-- Node.js + Express
-- MySQL + mysql2
-- JWT Authentication
-- bcrypt.js for password hashing
+
+* Node.js + Express
+* Mysql
+* JWT Authentication
+* bcrypt.js for password hashing
+* File storage: Local `/uploads` folder(multer)
+* dotenv for database configuration
+
+## DB configuration (use phpmyadmin)
+DB_HOST=sql12.freesqldatabase.com 
+DB_USER=sql12800854
+DB_PASSWORD=87KppxHxsi
+DB_NAME=sql12800854
+PORT=5000
+JWT_SECRET=secret
+
 
 ## API Endpoints
 
 ### Auth
-- POST `/api/auth/signup` → Register a new user
-- POST `/api/auth/login` → Login user, returns JWT
 
-### Patients
-- GET `/api/patients` → Fetch all patients (filters supported)
-- POST `/api/patients` → Add a patient
-- PUT `/api/patients/assign` → Assign doctor to patient
+| Method | Endpoint           | Description             | Roles |
+| ------ | ------------------ | ----------------------- | ----- |
+| POST   | `/api/auth/signup` | Register a new user     | All   |
+| POST   | `/api/auth/login`  | Login user, returns JWT | All   |
 
-### Doctor
-- GET `/api/doctor/patients` → Get assigned patients (with search)
-- POST `/api/doctor/treatment` → Add treatment record
-- GET `/api/doctor/history/:patientId` → Get patient treatment history
-- GET `/api/doctor/history/:patientId/paginated?page=1&limit=10` → Paginated history
-- GET `/api/doctor/lab-results/:patientId` → Get lab results for patient
+---
 
-### Billing
-- POST `/api/billing/:patientId` → Create bill
-- GET `/api/billing/:patientId` → Get all bills for patient
-- POST `/api/billing/:patientId/:billId/pay` → Pay a bill
+### Admin Routes
 
-### Lab Results
-- POST `/api/lab-results/upload` → Upload lab result file
-- GET `/api/lab-results/:patientId` → Get lab results for a patient
+| Method | Endpoint                   | Description         | Roles            |
+| ------ | -------------------------- | ------------------- | ---------------- |
+| POST   | `/api/admin/users`         | Add new user        | admin            |
+| GET    | `/api/admin/users`         | List users          | admin, reception |
+| PUT    | `/api/admin/users/:userId` | Update user info    | admin            |
+| DELETE | `/api/admin/users/:userId` | Delete user         | admin            |
+| GET    | `/api/admin/dashboard`     | Get dashboard stats | admin, reception |
 
-## Backend Live API
-- https://hospitalmangamentbackend.onrender.com
+---
 
-## Admin / Reception / Doctor Test Accounts
-- Admin: admin@gmail.com / 123456
-- Doctor: doctor1@gmail.com / 123456
-- Reception: reception@gmail.com / 123456
+### Patient Routes
+
+| Method | Endpoint               | Description                            | Roles                    |
+| ------ | ---------------------- | -------------------------------------- | ------------------------ |
+| GET    | `/api/patients`        | Fetch all patients (filters supported) | reception, doctor, admin |
+| POST   | `/api/patients`        | Add a new patient                      | reception, admin         |
+| PUT    | `/api/patients/assign` | Assign doctor to patient               | reception, admin         |
+
+---
+
+### Doctor Routes
+
+| Method | Endpoint                                   | Description                         | Roles  |
+| ------ | ------------------------------------------ | ----------------------------------- | ------ |
+| GET    | `/api/doctor/patients`                     | Get assigned patients (with search) | doctor |
+| POST   | `/api/doctor/treatment`                    | Add treatment record                | doctor |
+| GET    | `/api/doctor/history/:patientId`           | Get full patient history            | doctor |
+| GET    | `/api/doctor/history/:patientId/paginated` | Get paginated patient history       | doctor |
+| GET    | `/api/doctor/lab-results/:patientId`       | Get lab results for patient         | doctor |
+
+---
+
+### Billing Routes
+
+| Method | Endpoint                               | Description                 | Roles                    |
+| ------ | -------------------------------------- | --------------------------- | ------------------------ |
+| POST   | `/api/billings/:patientId`             | Create a bill               | reception, admin         |
+| GET    | `/api/billings/:patientId`             | Fetch all bills for patient | reception, doctor, admin |
+| POST   | `/api/billings/:patientId/:billId/pay` | Pay a bill                  | reception, admin         |
+
+---
+
+### Lab Routes
+
+| Method | Endpoint              | Description               | Roles              |
+| ------ | --------------------- | ------------------------- | ------------------ |
+| POST   | `/api/lab/upload`     | Upload lab report         | lab                |
+| GET    | `/api/lab/:patientId` | Fetch patient lab results | lab, doctor, admin |
+
+---
+
+### File Uploads
+
+* Uploaded files are served via:
+
+```
+http://localhost:5000/uploads/<file-name>
+```
+
+---
+
+## Live Backend
+  Diployed on render platform
+* [Hospital Management System API](https://hospitalmangamentbackend.onrender.com)
+
+---
+
+## Test Accounts
+
+| Role      | Email                                             | Password |
+| --------- | ------------------------------------------------- | -------- |
+| Admin     | [admin@gmail.com](mailto:admin@gmail.com)         | 123456   |
+| Doctor    | [doctor@gmail.com](mailto:doctor1@gmail.com)     | 123456   |
+| Reception | [reception@gmail.com](mailto:reception@gmail.com) | 123456   |
+| Lab | [lab@gmail.com](mailto:lab@gmail.com) | 123456   |
+
+---
 
 ## Run Locally
+
 ```bash
 git clone <your-repo-url>
 cd backend
 npm install
-npm start
+npm run dev
+``
+
+Server will run on: `http://localhost:5000`
