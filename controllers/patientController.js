@@ -22,7 +22,7 @@ export const getPatients = async (req, res) => {
 
         const data = await getAllPatients({ search, page, limit, doctorId, gender });
 
-        // Always return patients as an array
+      
         res.json({
             patients: Array.isArray(data.patients) ? data.patients : [],
             totalCount: data.totalCount || 0,
@@ -32,7 +32,7 @@ export const getPatients = async (req, res) => {
     } catch (error) {
         console.error('Error fetching patients:', error);
         res.status(500).json({
-            patients: [], // fallback empty array
+            patients: [], 
             totalCount: 0,
             totalPages: 1,
             currentPage: parseInt(req.query.page) || 1,
